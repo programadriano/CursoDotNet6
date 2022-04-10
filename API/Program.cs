@@ -12,6 +12,14 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var root = Directory.GetCurrentDirectory();
+var dotenv = Path.Combine(root, ".env");
+EnvConfig.Load(dotenv);
+
+builder.Configuration["Databases:ConnectionString"] = Environment.GetEnvironmentVariable("DATABASES__CONNECTIONSTRING");
+builder.Configuration["Databases:DatabaseName"] = Environment.GetEnvironmentVariable("DATABASES__DATABASENAME");
+
+
 #region [Database]
 builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection(nameof(DatabaseSettings)));
 builder.Services.AddSingleton<IDatabaseSettings>(sp => sp.GetRequiredService<IOptions<DatabaseSettings>>().Value);
